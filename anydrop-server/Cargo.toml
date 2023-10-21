@@ -1,0 +1,25 @@
+[package]
+name = "anydrop-server"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+axum = { git = "https://github.com/tokio-rs/axum.git", branch = "main", features = [
+    "http2",
+    "tracing",
+    "multipart",
+    "ws",
+] }
+anyhow = "1"
+serde = "1"
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+listenfd = "1"
+tracing = "0.1.40"
+tracing-subscriber = "0.3.17"
+scylla = "0.10"
+clap = "4.4.6"
+metrics = "0.21.1"
+metrics-exporter-prometheus = "0.12.1"
