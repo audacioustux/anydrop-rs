@@ -8,14 +8,19 @@ async fn main() -> Result<()> {
     let uri = std::env::var("SCYLLA_URI").unwrap_or_else(|_| "127.0.0.1:9042".to_string());
     let session: Session = SessionBuilder::new().known_node(uri).build().await?;
 
+    // should be 3 for production
+    let replication_factor = 1;
     session
         .query(
-            r#"
-            CREATE KEYSPACE IF NOT EXISTS anydrop WITH REPLICATION = {
+            format!(
+                r#"
+            CREATE KEYSPACE IF NOT EXISTS anydrop WITH REPLICATION = {{
                 'class' : 'NetworkTopologyStrategy', 
-                'replication_factor' : 3
-            } 
+                'replication_factor' : {} 
+            }} 
             "#,
+                replication_factor
+            ),
             &[],
         )
         .await?;
