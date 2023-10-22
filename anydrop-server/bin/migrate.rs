@@ -14,11 +14,11 @@ async fn main() -> Result<()> {
         .query(
             format!(
                 r#"
-            CREATE KEYSPACE IF NOT EXISTS anydrop WITH REPLICATION = {{
-                'class' : 'NetworkTopologyStrategy', 
-                'replication_factor' : {} 
-            }} 
-            "#,
+                CREATE KEYSPACE IF NOT EXISTS anydrop WITH REPLICATION = {{
+                    'class' : 'NetworkTopologyStrategy', 
+                    'replication_factor' : {} 
+                }} 
+                "#,
                 replication_factor
             ),
             &[],
