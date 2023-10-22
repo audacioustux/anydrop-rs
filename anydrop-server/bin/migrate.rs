@@ -10,6 +10,7 @@ async fn main() -> Result<()> {
 
     // should be 3 for production
     let replication_factor = 1;
+
     session
         .query(
             format!(
