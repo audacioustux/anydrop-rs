@@ -10,7 +10,6 @@ axum = { git = "https://github.com/tokio-rs/axum.git", branch = "main", features
     "http2",
     "tracing",
     "multipart",
-    "ws",
 ] }
 anyhow = "1"
 serde = "1"
@@ -20,6 +19,12 @@ listenfd = "1"
 tracing = "0.1.40"
 tracing-subscriber = "0.3.17"
 scylla = "0.10"
-clap = "4.4.6"
-metrics = "0.21.1"
-metrics-exporter-prometheus = "0.12.1"
+clap = "4"
+metrics = "0.21"
+metrics-exporter-prometheus = "0.12"
+console-subscriber = "0.2"
+uuid = "1.5"
+
+[[bin]]
+name = "migrate"
+path = "bin/migrate.rs"

@@ -1,0 +1,25 @@
+version: '3.7'
+services:
+  scylla-1:
+    image: scylladb/scylla:latest
+    restart: on-failure
+    ports:
+      - 9042:9042
+    networks:
+      - scylla-net
+    command: --seeds $(hostname -i)
+  scylla-2:
+    image: scylladb/scylla:latest
+    restart: on-failure
+    networks:
+      - scylla-net
+    command: --seeds scylla
+  scylla-3:
+    image: scylladb/scylla:latest
+    restart: on-failure
+    networks:
+      - scylla-net
+    command: --seeds scylla
+networks:
+  scylla-net:
+
