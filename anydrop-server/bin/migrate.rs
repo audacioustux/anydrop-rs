@@ -41,9 +41,9 @@ async fn main() -> Result<()> {
     // the complete event journal for a system is basically a chain of events partitioned by the
     // instance_id. this design choice is sensible for the fact that the event journal should only
     // be read and written by the system itself.
-    let ttl = 6 * 30 * 24 * 60 * 60; // 6 months in seconds
+    let default_time_to_live = 6 * 30 * 24 * 60 * 60; // TTL, 6 months in seconds
     let window_count = 25; // ideally should be approximately 20-30 windows
-    let compaction_window_size: u32 = ttl / window_count;
+    let compaction_window_size: u32 = default_time_to_live / window_count;
 
     session
         .query(
@@ -62,7 +62,7 @@ async fn main() -> Result<()> {
                     'compaction_window_unit': 'DAYS'
                 }}
                 "#,
-                ttl, compaction_window_size,
+                default_time_to_live, compaction_window_size,
             ),
             &[],
         )
