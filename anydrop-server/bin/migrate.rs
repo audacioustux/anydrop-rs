@@ -35,13 +35,12 @@ async fn main() -> Result<()> {
     // try to avoid passivation if possible. Also, partition for each activation aligns well
     // with the possibility that the system is teleported to a different node.
     //
-    // sequence_nr: is the sequence number of the event. it should be non-decreasing. it's also a
-    // hard limit for the number of events in a partition. it's a pragmatic choice with not much of
-    // a downside.
+    // sequence_nr: is the sequence number of the event. it's also a hard limit for the number of
+    // events in a partition. it's a pragmatic choice with not much of a downside.
     //
-    // the complete event journal for a system is basically a chain of events partitioned by the
-    // instance_id. this design choice is sensible for the fact that the event journal should only
-    // be read and written by the system itself.
+    // the complete event journal for a system is ordered (instance_id, sequence_nr). this design
+    // choice is sensible for the fact that the event journal should only be read and written by
+    // the system itself.
     let default_time_to_live = 6 * 30 * 24 * 60 * 60; // TTL, 6 months in seconds
     let window_count = 25; // ideally should be approximately 20-30 windows
     let compaction_window_size: u32 = default_time_to_live / window_count;
