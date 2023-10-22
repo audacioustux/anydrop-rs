@@ -50,7 +50,7 @@ async fn main() -> Result<()> {
                     event blob,
                     PRIMARY KEY (instance_id, sequence_nr)
                 )
-                WITH default_time_to_live = {},
+                WITH default_time_to_live = {}
                 AND compaction = {{
                     'class': 'TimeWindowCompactionStrategy',
                     'compaction_window_size': {},
