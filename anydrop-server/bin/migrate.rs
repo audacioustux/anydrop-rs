@@ -26,6 +26,7 @@ async fn main() -> Result<()> {
         )
         .await?;
 
+    // events
     // instance_id: uniquely identifies instances of a system. a new instance is created when a
     // system is initialized after being passivated or when a system is created for the first
     // time. the state of a system tracks the current instance_id. only one active instance of a
@@ -64,6 +65,43 @@ async fn main() -> Result<()> {
                 "#,
                 default_time_to_live, compaction_window_size,
             ),
+            &[],
+        )
+        .await?;
+
+    // create UDT for event id
+    session
+        .query(
+            r#"
+            CREATE TYPE IF NOT EXISTS anydrop.event_id (
+                instance_id timeuuid,
+                sequence_nr int
+            )
+            "#,
+            &[],
+        )
+        .await?;
+
+    // states
+    // stores the eventual consistent state of each system. as it's only a memory dump, most of them
+    // are expected to be small. but highly non-uniform in size.
+    //
+    // snapshots should only be treated as optimization. if a snapshot is not available, the system
+    // recovers from the event journal. at-least one snapshot is expected to be available for each
+    // system.
+    session
+        .query(
+            r#"
+            CREATE TABLE IF NOT EXISTS anydrop.states (
+                system_id uuid,
+                last_event event_id,
+                state blob,
+                PRIMARY KEY (system_id)
+            )
+            WITH compaction = {
+                'class': 'SizeTieredCompactionStrategy'
+            }
+            "#,
             &[],
         )
         .await?;
