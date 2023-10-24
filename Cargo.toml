@@ -6,3 +6,6 @@ members = ["anydrop-*"]
 lto = "thin"
 opt-level = 3
 debug = false
+
+[profile.dev]
+incremental = true

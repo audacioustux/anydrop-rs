@@ -1,10 +1,10 @@
-use axum::Router;
+use axum::{routing::get, Router};
 use listenfd::ListenFd;
 use tokio::net::TcpListener;
 
 #[tokio::main]
 async fn main() {
-    let app = Router::new();
+    let app = Router::new().route("/", get(root));
 
     let mut listenfd = ListenFd::from_env();
     let listener = match listenfd.take_tcp_listener(0).unwrap() {
@@ -14,4 +14,8 @@ async fn main() {
 
     println!("listening on {}", listener.local_addr().unwrap());
     axum::serve(listener, app).await.unwrap();
+}
+
+async fn root() -> &'static str {
+    "Hello, World!"
 }

@@ -1,6 +1,8 @@
 use anyhow::Result;
 use scylla::{Session, SessionBuilder};
 
+const SECONDS_IN_A_DAY: u32 = 24 * 60 * 60;
+
 #[tokio::main]
 async fn main() -> Result<()> {
     tracing_subscriber::fmt::init();
@@ -42,9 +44,11 @@ async fn main() -> Result<()> {
     // the complete event journal for a system is ordered (instance_id, sequence_nr). this design
     // choice is sensible for the fact that the event journal should only be read and written by
     // the system itself.
-    let default_time_to_live = 6 * 30 * 24 * 60 * 60; // TTL, 6 months in seconds
+    let ttl_in_days = 3 * 365;
+
+    let default_time_to_live = ttl_in_days * SECONDS_IN_A_DAY;
     let window_count = 25; // ideally should be approximately 20-30 windows
-    let compaction_window_size: u32 = default_time_to_live / window_count;
+    let compaction_window_size: u32 = ttl_in_days / window_count;
 
     session
         .query(
@@ -77,30 +81,6 @@ async fn main() -> Result<()> {
                 instance_id timeuuid,
                 sequence_nr int
             )
-            "#,
-            &[],
-        )
-        .await?;
-
-    // states
-    // stores the eventual consistent state of each system. as it's only a memory dump, most of them
-    // are expected to be small. but highly non-uniform in size.
-    //
-    // snapshots should only be treated as optimization. if a snapshot is not available, the system
-    // recovers from the event journal. at-least one snapshot is expected to be available for each
-    // system.
-    session
-        .query(
-            r#"
-            CREATE TABLE IF NOT EXISTS anydrop.states (
-                system_id uuid,
-                last_event event_id,
-                state blob,
-                PRIMARY KEY (system_id)
-            )
-            WITH compaction = {
-                'class': 'SizeTieredCompactionStrategy'
-            }
             "#,
             &[],
         )

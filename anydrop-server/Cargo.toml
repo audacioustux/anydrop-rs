@@ -2,6 +2,7 @@
 name = "anydrop-server"
 version = "0.1.0"
 edition = "2021"
+default-run = "anydrop-server"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -12,18 +13,20 @@ axum = { git = "https://github.com/tokio-rs/axum.git", branch = "main", features
     "multipart",
 ] }
 anyhow = "1"
-serde = "1"
+serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tokio = { version = "1", features = ["full"] }
 listenfd = "1"
-tracing = "0.1.40"
-tracing-subscriber = "0.3.17"
+tracing = "0.1"
+tracing-subscriber = "0.3"
 scylla = "0.10"
 clap = "4"
 metrics = "0.21"
 metrics-exporter-prometheus = "0.12"
 console-subscriber = "0.2"
-uuid = "1.5"
+uuid = "1"
+chrono = "0.4"
+surrealdb = { version = "1.0.0", features = ["kv-rocksdb"] }
 
 [[bin]]
 name = "migrate"
