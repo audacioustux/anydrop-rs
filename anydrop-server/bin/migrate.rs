@@ -1,8 +1,6 @@
 use anyhow::Result;
 use scylla::{Session, SessionBuilder};
 
-const SECONDS_IN_A_DAY: u32 = 24 * 60 * 60;
-
 #[tokio::main]
 async fn main() -> Result<()> {
     tracing_subscriber::fmt::init();
@@ -44,10 +42,10 @@ async fn main() -> Result<()> {
     // the complete event journal for a system is ordered (instance_id, sequence_nr). this design
     // choice is sensible for the fact that the event journal should only be read and written by
     // the system itself.
-    let ttl_in_days = 3 * 365;
+    let ttl_in_days = 365;
 
-    let default_time_to_live = ttl_in_days * SECONDS_IN_A_DAY;
-    let window_count = 25; // ideally should be approximately 20-30 windows
+    let default_time_to_live = ttl_in_days * 24 * 60 * 60; // in seconds
+    let window_count = 20;
     let compaction_window_size: u32 = ttl_in_days / window_count;
 
     session
