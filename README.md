@@ -2,11 +2,11 @@
 
 ## Design Goals
 
-Akka inspired, but different in some very fundamental ways.
-Event Sourced, but not CQRS.
-In-memory computation.
-Highly concurrent, distributed, and fault-tolerant.
-Embraces Component Based Software Engineering (CBSE).
+Akka inspired, but different in some very fundamental ways.  
+Event Sourced, but not CQRS.  
+In-memory computation.  
+Highly concurrent, distributed, and fault-tolerant.  
+Embraces Component Based Software Engineering (CBSE).  
 
 ## Key Components
 
